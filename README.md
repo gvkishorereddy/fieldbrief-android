@@ -26,8 +26,8 @@ The hosted endpoint is static JSON on GitHub, not a production dispatch backend.
 Open in Android Studio with JDK 17 and Android SDK 35. The build pins AGP 8.9.2, Kotlin 2.1.20, and Gradle 8.11.1.
 
 ```sh
-gradle :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
-gradle :app:connectedDebugAndroidTest
+./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
+./gradlew :app:connectedDebugAndroidTest
 ```
 
 CI runs JVM tests and Android lint, builds an APK, then exercises an API 35 emulator. Tests cover priority ordering, filtering, terminal status behavior, override merging, invalid feeds, offline launch, and state preservation through Activity recreation. CI artifacts include reports and an emulator screenshot.
