@@ -1,0 +1,30 @@
+[
+  {
+    "id": "TR-101",
+    "title": "Training center alarm drill",
+    "area": "North campus \u00b7 Exercise zone A",
+    "severity": "HIGH",
+    "brief": "Simulated smoke alarm. Review the briefing and practice acknowledging the training incident."
+  },
+  {
+    "id": "TR-102",
+    "title": "Equipment readiness check",
+    "area": "Station lab \u00b7 Exercise zone B",
+    "severity": "MEDIUM",
+    "brief": "Practice a routine equipment checklist with the training crew. No live response is requested."
+  },
+  {
+    "id": "TR-103",
+    "title": "Community event walkthrough",
+    "area": "Demo plaza \u00b7 Exercise zone C",
+    "severity": "LOW",
+    "brief": "Review the fictional event layout and update your local progress."
+  },
+  {
+    "id": "TR-104",
+    "title": "Communications handoff exercise",
+    "area": "Training room \u00b7 Exercise zone D",
+    "severity": "MEDIUM",
+    "brief": "Coordinate a fictional handoff and mark progress on this device."
+  }
+]

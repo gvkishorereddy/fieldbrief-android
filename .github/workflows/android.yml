@@ -1,0 +1,71 @@
+name: Android build and tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - run: gradle wrapper --gradle-version 8.11.1 --distribution-type bin
+      - run: gradle :app:testDebugUnitTest :app:lintDebug :app:assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-build
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/test-results/
+            app/build/reports/
+            gradle/wrapper/
+            gradlew
+            gradlew.bat
+  device-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            gradle :app:connectedDebugAndroidTest --stacktrace
+            adb shell am start -n com.gvkishore.fieldbrief/.MainActivity --ez offlineDemo true
+            sleep 3
+            adb shell screencap -p /sdcard/fieldbrief.png
+            adb pull /sdcard/fieldbrief.png fieldbrief.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-device-tests
+          path: |
+            app/build/reports/androidTests/
+            app/build/outputs/androidTest-results/
+            fieldbrief.png
